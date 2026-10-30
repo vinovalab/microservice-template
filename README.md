@@ -7,8 +7,8 @@ davvero fare.
 
 Il template è **una cartella**, non un progetto da avviare: si copia dentro
 `services/<nome-servizio>/` del repository di destinazione e si sostituiscono i
-segnaposto. È la forma in cui viene usato oggi, ed è anche la forma che serve a
-uno script di scaffolding, quando ci sarà.
+segnaposto. Lo fa `create-service.js`, qui accanto (sotto); a mano si fa come
+spiegato in [I segnaposto](#i-segnaposto).
 
 ## Da leggere prima
 
@@ -37,6 +37,32 @@ uno script di scaffolding, quando ci sarà.
 
 Il modulo principale eredita da `BaseService` e ha due soli agganci da
 riempire: `_onInit()` e `_onShutdown()`.
+
+## Con lo script
+
+```sh
+node create-service.js payment-normalizer-service \
+  --repo=../backbone-core --description="Normalizza i pagamenti in arrivo."
+```
+
+Senza dipendenze, basta `node`. Nel repository indicato (di default la cartella
+corrente):
+
+- copia `template/` in `services/<nome>/` e sostituisce tutti i segnaposto,
+  controllando alla fine che non ne resti nessuno;
+- aggiunge il servizio in fondo a `services:` di
+  `docker/compose/docker-compose.dev.yml`, con il secret di build `npm_token`
+  (lo dichiara anche in cima, se manca) e la rete `dev_app_net` se il compose la
+  usa;
+- aggiunge la sezione `# --- <nome> ---` a `docker/env/.env.dev.example`.
+
+`--port` è facoltativo: senza, prende la prima porta libera dopo la più alta fra
+5000 e 5099 usata in questo repository e nei repository accanto, perché su DEV
+le porte sono di tutti. `--dry-run` mostra cosa farebbe senza scrivere niente.
+
+Non tocca pipeline, `docker-compose.test.yml` né `docker-compose.prod.yml`: sono
+diversi da repository a repository, e lo script alla fine elenca cosa resta da
+fare a mano.
 
 ## I segnaposto
 
@@ -109,7 +135,7 @@ dell'immagine. Il compose deve dichiarare:
 
 ```yaml
 build:
-  context: ../..
+  context: ../../..          # dal compose in <repo>/docker/compose: la cartella dei repository
   dockerfile: <repo>/services/<nome>/Dockerfile
   secrets: [npm_token]
 secrets:

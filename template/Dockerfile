@@ -5,7 +5,7 @@ COPY __REPO_FOLDER__/services/__SERVICE_FOLDER__/ ./services/__SERVICE_FOLDER__/
 # Segreto di build e non ARG: il valore di un ARG finisce nella stringa del
 # comando ed e esportato con la cache di build. Il compose deve dichiarare
 #   build: { secrets: [npm_token] }
-# e definire  npm_token: { environment: NODE_AUTH_TOKEN }.
+# e definire  npm_token: { environment: GH_TOKEN }.
 RUN --mount=type=secret,id=npm_token \
     token="$(cat /run/secrets/npm_token 2>/dev/null || true)" \
  && { test -n "$token" || { echo "npm_token mancante: serve per @vinovalab/backbone-shared" >&2; exit 1; }; } \

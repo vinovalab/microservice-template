@@ -155,9 +155,9 @@ function addToCompose(compose, block) {
   const secrets = section(lines, "secrets");
   if (!secrets) {
     while (lines.length && lines[lines.length - 1].trim() === "") lines.pop();
-    lines.push("", "secrets:", "  npm_token:", "    environment: NODE_AUTH_TOKEN", "");
+    lines.push("", "secrets:", "  npm_token:", "    environment: GH_TOKEN", "");
   } else if (!secrets.has("npm_token")) {
-    lines.splice(secrets.start + 1, 0, "  npm_token:", "    environment: NODE_AUTH_TOKEN");
+    lines.splice(secrets.start + 1, 0, "  npm_token:", "    environment: GH_TOKEN");
   }
   return lines.join("\n");
 }

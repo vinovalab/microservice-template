@@ -217,7 +217,7 @@ build:
   secrets: [npm_token]
 secrets:
   npm_token:
-    environment: NODE_AUTH_TOKEN
+    environment: GH_TOKEN
 ```
 
 ## Running locally
